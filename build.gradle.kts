@@ -27,7 +27,11 @@ kotlin {
         }
     }
     sourceSets {
-        val nativeMain by getting
+        val nativeMain by getting {
+            dependencies {
+                implementation("com.squareup.okio:okio:3.1.0")
+            }
+        }
         val nativeTest by getting
     }
 }
