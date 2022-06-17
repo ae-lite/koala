@@ -5,9 +5,9 @@ import okio.BufferedSource
 class Parser {
     fun parse(sourceFile: BufferedSource): Class {
         return Class("Main")
-            .registerMethod(NativeMethod("main") { _, _ ->
+            .registerMethod(NativeMethod("main") { self, _ ->
                 println("hello world!")
-                Class("placeholder").construct()
+                self
             })
     }
 }

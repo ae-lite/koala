@@ -5,7 +5,9 @@ class Class(val name: String) {
 
     fun construct(vararg args: Object): Object {
         val instance = Object(this)
-        try { this.invoke("constructor", instance, *args) } catch (_: Exception) { }
+        try {
+            return this.invoke("constructor", instance, *args)
+        } catch (_: Exception) { }
         return instance
     }
 
