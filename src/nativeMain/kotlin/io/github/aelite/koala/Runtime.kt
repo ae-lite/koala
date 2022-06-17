@@ -6,10 +6,13 @@ import okio.Path.Companion.toPath
 
 class Runtime(classpath: Classpath) {
     private val fileSystem = FileSystem.SYSTEM
-    private val classes = HashMap<String, Class>()
+    private val classes = HashMap<String, Interface>()
     private val parser = Parser()
 
     init {
+        this.registerClass(io.github.aelite.koala.stdlib.lang.Boolean)
+        this.registerClass(io.github.aelite.koala.stdlib.lang.Number)
+        this.registerClass(io.github.aelite.koala.stdlib.lang.String)
         this.loadClasspath(classpath)
     }
 
@@ -18,11 +21,15 @@ class Runtime(classpath: Classpath) {
             val path = sourceFile.toPath()
             val bufferedSource = this.fileSystem.source(path).buffer()
             val clazz = this.parser.parse(bufferedSource)
-            this.classes[clazz.name] = clazz
+            this.registerClass(clazz)
         }
     }
 
-    fun findClass(name: String): Class {
+    fun registerClass(clazz: Interface) {
+        this.classes[clazz.name] = clazz
+    }
+
+    fun findClass(name: String): Interface {
         return this.classes[name] ?: throw Exception("class $name not found")
     }
 }
