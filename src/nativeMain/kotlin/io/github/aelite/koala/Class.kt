@@ -1,16 +1,7 @@
 package io.github.aelite.koala
 
-open class Class {
-    val name: String
-    private val base: Class?
+class Class(val name: String) {
     private val methods = HashMap<String, AbstractMethod>()
-
-    constructor(name: String): this(name, null)
-
-    constructor(name: String, base: Class?) {
-        this.name = name
-        this.base = base
-    }
 
     fun construct(vararg args: Object): Object {
         val instance = Object(this)
@@ -26,7 +17,6 @@ open class Class {
     fun invoke(name: String, instance: Object, vararg args: Object): Object {
         val method = this.methods[name]
         if (method != null) return method.invoke(instance, *args)
-        else if (this.base != null) return this.base.invoke(name, instance, *args)
         throw Exception("method $name not found")
     }
 }
