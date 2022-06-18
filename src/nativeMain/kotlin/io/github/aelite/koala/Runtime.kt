@@ -4,7 +4,7 @@ import okio.FileSystem
 import okio.buffer
 import okio.Path.Companion.toPath
 
-class Runtime(classpath: Classpath) {
+class Runtime {
     private val fileSystem = FileSystem.SYSTEM
     private val classes = HashMap<String, Interface>()
     private val parser = Parser()
@@ -13,7 +13,6 @@ class Runtime(classpath: Classpath) {
         this.registerClass(io.github.aelite.koala.stdlib.lang.Boolean)
         this.registerClass(io.github.aelite.koala.stdlib.lang.Number)
         this.registerClass(io.github.aelite.koala.stdlib.lang.String)
-        this.loadClasspath(classpath)
     }
 
     fun loadClasspath(classpath: Classpath) {
