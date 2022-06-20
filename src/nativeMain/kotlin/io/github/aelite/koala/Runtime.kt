@@ -19,7 +19,7 @@ class Runtime {
         classpath.sourceFiles.forEach { sourceFile ->
             val path = sourceFile.toPath()
             val bufferedSource = this.fileSystem.source(path).buffer()
-            val clazz = this.parser.parse(bufferedSource)
+            val clazz = this.parser.parse(bufferedSource.readUtf8())
             this.registerClass(clazz)
         }
     }

@@ -1,13 +1,14 @@
+package io.github.aelite.koala.integration
+
 import io.github.aelite.koala.Class
-import io.github.aelite.koala.NativeMethod
+import io.github.aelite.koala.MockedMethod
 import io.github.aelite.koala.Parser
-import okio.Buffer
 import kotlin.test.Test
-import kotlin.test.assertTrue
+import kotlin.test.assertEquals
 
 class HelloWorldIntegrationTest {
 
-    private var Main: Class = Parser().parse(Buffer().writeUtf8("""
+    private val source = """
         class Main
 
         private native stdoutPrint(value: String)
@@ -15,20 +16,14 @@ class HelloWorldIntegrationTest {
         public main() {
             this.stdoutPrint("hello world!")
         }
-    """)) as Class
+    """
 
-    private var stdoutPrintCalled = false
-
-    init {
-        Main.registerMethod(NativeMethod("stdoutPrint") { self, args ->
-            stdoutPrintCalled = true
-            self
-        })
-    }
+    private var stdoutPrint = MockedMethod("stdoutPrint")
+    private var Main: Class = Parser().parse(this.source).registerMethod(this.stdoutPrint) as Class
 
     @Test
-    fun `executes correctly - invoking main calls stdoutPrint`() {
-        Main.construct().invoke("main")
-        assertTrue(stdoutPrintCalled, "stdoutPrint was not called")
+    fun executesCorrectly() {
+        this.Main.construct().invoke("main")
+        assertEquals(1, this.stdoutPrint.invocations, "stdoutPrint was not called exactly once")
     }
 }
