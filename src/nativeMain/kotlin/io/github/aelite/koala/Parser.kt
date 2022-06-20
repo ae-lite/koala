@@ -11,7 +11,7 @@ class Parser {
         val lexer = KoalaLexer(CharStreams.fromString(source, "hello.koala"))
         val parser = KoalaParser(CommonTokenStream(lexer))
         parser.addErrorListener(ConsoleErrorListener.INSTANCE)
-        val tree = parser.greet()
+        val tree = parser.parse()
 
         return Class("Main")
             .registerMethod(NativeMethod("main") { self, _ ->

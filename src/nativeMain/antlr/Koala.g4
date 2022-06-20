@@ -1,5 +1,31 @@
 grammar Koala;
 
-greet: 'hello koala';
+parse: clazz;
+clazz: CLASS TYPE class_body;
+class_body: native_method_declaration* method_declaration*;
+native_method_declaration: PRIVATE NATIVE ID LPAREN formal_parameters? RPAREN (COLON TYPE)?;
+method_declaration: PUBLIC ID LPAREN formal_parameters? RPAREN (COLON TYPE)? LBRACE statement* RBRACE;
+formal_parameters: formal_parameter (COMMA formal_parameter)*;
+formal_parameter: ID COLON TYPE;
+statement: expression;
+expression: access_expression;
+access_expression: access_expression DOT member | atom;
+member: ID LPAREN actual_parameters? RPAREN | ID;
+atom: ID | LPAREN expression RPAREN | STRING_LITERAL;
+actual_parameters: expression (COMMA expression)*;
 
+CLASS: 'class';
+PRIVATE: 'private';
+PUBLIC: 'public';
+NATIVE: 'native';
+LPAREN: '(';
+RPAREN: ')';
+LBRACE: '{';
+RBRACE: '}';
+COLON: ':';
+DOT: '.';
+COMMA: ',';
+STRING_LITERAL: '"'.*?'"';
+ID: [a-z][a-zA-Z0-9]*;
+TYPE: [A-Z][a-zA-Z0-9]*;
 WS: [ \t\r\n]+ -> skip;
