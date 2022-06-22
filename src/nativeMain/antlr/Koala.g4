@@ -1,22 +1,26 @@
 grammar Koala;
 
 parse: clazz;
-clazz: CLASS TYPE class_body;
-class_body: native_method_declaration* method_declaration*;
-native_method_declaration: PRIVATE NATIVE ID LPAREN formal_parameters? RPAREN (COLON TYPE)?;
-method_declaration: PUBLIC ID LPAREN formal_parameters? RPAREN (COLON TYPE)? LBRACE statement* RBRACE;
-formal_parameters: formal_parameter (COMMA formal_parameter)*;
-formal_parameter: ID COLON TYPE;
+clazz: CLASS TYPE nativeMethod* method*;
+
+nativeMethod: NATIVE ID LPAREN formalParameters? RPAREN (COLON TYPE)?;
+method: ID LPAREN formalParameters? RPAREN (COLON TYPE)? LBRACE statement* RBRACE;
+
 statement: expression;
-expression: access_expression;
-access_expression: access_expression DOT member | atom;
-member: ID LPAREN actual_parameters? RPAREN | ID;
-atom: ID | LPAREN expression RPAREN | STRING_LITERAL;
-actual_parameters: expression (COMMA expression)*;
+
+expression:
+      expression DOT ID
+    | expression DOT ID LPAREN actualParameters? RPAREN
+    | ID
+    | LPAREN expression RPAREN
+    | STRING_LITERAL;
+
+formalParameters: formalParameter (COMMA formalParameter)*;
+formalParameter: ID COLON TYPE;
+actualParameters: actualParameter (COMMA actualParameter)*;
+actualParameter: ID COLON expression;
 
 CLASS: 'class';
-PRIVATE: 'private';
-PUBLIC: 'public';
 NATIVE: 'native';
 LPAREN: '(';
 RPAREN: ')';

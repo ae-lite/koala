@@ -11,10 +11,10 @@ class HelloWorldIntegrationTest {
     private val source = """
         class Main
 
-        private native stdoutPrint(value: String)
+        native stdoutPrint(value: String)
 
-        public main() {
-            this.stdoutPrint("hello world!")
+        main() {
+            this.stdoutPrint(value: "hello world!")
         }
     """
 
