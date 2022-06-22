@@ -14,7 +14,7 @@ class HelloWorldIntegrationTest {
         native stdoutPrint(value: String)
 
         main() {
-            this.stdoutPrint(value: "hello world!")
+            this.stdoutPrint("hello world!")
         }
     """
 

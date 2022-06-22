@@ -14,9 +14,5 @@ class Parser {
         val tree = parser.parse()
 
         return Class("Main")
-            .registerMethod(NativeMethod("main") { self, _ ->
-                println("hello world!")
-                self
-            })
     }
 }

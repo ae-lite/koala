@@ -17,8 +17,7 @@ expression:
 
 formalParameters: formalParameter (COMMA formalParameter)*;
 formalParameter: ID COLON TYPE;
-actualParameters: actualParameter (COMMA actualParameter)*;
-actualParameter: ID COLON expression;
+actualParameters: expression (COMMA expression)*;
 
 CLASS: 'class';
 NATIVE: 'native';
