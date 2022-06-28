@@ -9,10 +9,8 @@ method: ID LPAREN formalParameters? RPAREN (COLON TYPE)? LBRACE statement* RBRAC
 statement: expression;
 
 expression:
-      expression DOT ID
-    | expression DOT ID LPAREN actualParameters? RPAREN
+      expression DOT ID LPAREN actualParameters? RPAREN
     | ID
-    | LPAREN expression RPAREN
     | STRING_LITERAL;
 
 formalParameters: formalParameter (COMMA formalParameter)*;

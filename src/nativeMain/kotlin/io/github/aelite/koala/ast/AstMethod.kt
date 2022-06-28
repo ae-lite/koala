@@ -2,10 +2,13 @@ package io.github.aelite.koala.ast
 
 import io.github.aelite.koala.*
 
-class AstMethod(name: String, parameters: List<FormalParameter>, returnType: Class) : Method(name, parameters, returnType) {
+class AstMethod(name: String, parameters: List<FormalParameter>, returnType: Class, val statements: List<AstStatement>) : Method(name, parameters, returnType) {
     override fun onInvoke(self: Object, parameters: Map<String, Object>): Object {
         val stackFrame = StackFrame()
-        // TODO: copy parameters into stackFrame
-        TODO("Not yet implemented")
+        stackFrame.add("this", self)
+        parameters.forEach { parameter -> stackFrame.add(parameter.key, parameter.value) }
+        this.statements.forEach { statement -> statement.execute(stackFrame) }
+        // TODO check for return statement (maybe by catching some "return"-exception)
+        return self
     }
 }
