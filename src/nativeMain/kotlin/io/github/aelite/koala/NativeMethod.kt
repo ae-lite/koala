@@ -1,6 +1,6 @@
 package io.github.aelite.koala
 
-class NativeMethod(name: String, parameters: List<FormalParameter>, returnType: Class, private val callback: Callable) : Method(name, parameters, returnType) {
+class NativeMethod(name: String, parameters: List<FormalParameter>, returnType: Interface, private val callback: Callable) : Method(name, parameters, returnType) {
     fun interface Callable {
         fun onInvoke(self: Object, parameters: Map<String, Object>): Object
     }

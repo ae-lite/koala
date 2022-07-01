@@ -1,21 +1,20 @@
 grammar Koala;
 
 parse: clazz;
-clazz: CLASS TYPE nativeMethod* method*;
+clazz: CLASS name=TYPE nativeMethods+=nativeMethod* methods+=method*;
 
-nativeMethod: NATIVE ID LPAREN formalParameters? RPAREN (COLON TYPE)?;
-method: ID LPAREN formalParameters? RPAREN (COLON TYPE)? LBRACE statement* RBRACE;
+nativeMethod: NATIVE name=ID LPAREN (parameters+=formalParameter (COMMA parameters+=formalParameter)*)? RPAREN (COLON returnType=TYPE)?;
+method: name=ID LPAREN (parameters+=formalParameter (COMMA parameters+=formalParameter)*)? RPAREN (COLON returnType=TYPE)? LBRACE statements+=statement* RBRACE;
 
-statement: expression;
+statement
+    : expression #expressionStatement;
 
-expression:
-      expression DOT ID LPAREN actualParameters? RPAREN
-    | ID
-    | STRING_LITERAL;
+expression
+    : obj=expression DOT name=ID LPAREN (parameters+=expression (COMMA parameters+=expression)*)? RPAREN #methodCallExpression
+    | name=ID #variableExpression
+    | value=STRING_LITERAL #stringLiteralExpression;
 
-formalParameters: formalParameter (COMMA formalParameter)*;
-formalParameter: ID COLON TYPE;
-actualParameters: expression (COMMA expression)*;
+formalParameter: name=ID COLON type=TYPE;
 
 CLASS: 'class';
 NATIVE: 'native';

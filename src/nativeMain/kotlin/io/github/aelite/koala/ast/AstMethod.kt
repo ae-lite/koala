@@ -2,7 +2,7 @@ package io.github.aelite.koala.ast
 
 import io.github.aelite.koala.*
 
-class AstMethod(name: String, parameters: List<FormalParameter>, returnType: Class, val statements: List<AstStatement>) : Method(name, parameters, returnType) {
+class AstMethod(name: String, parameters: List<FormalParameter>, returnType: Interface, val statements: List<AstStatement>) : Method(name, parameters, returnType) {
     override fun onInvoke(self: Object, parameters: Map<String, Object>): Object {
         val stackFrame = StackFrame()
         stackFrame.add("this", self)

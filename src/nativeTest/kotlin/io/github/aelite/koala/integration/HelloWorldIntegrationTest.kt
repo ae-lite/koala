@@ -1,8 +1,10 @@
 package io.github.aelite.koala.integration
 
 import io.github.aelite.koala.Class
+import io.github.aelite.koala.FormalParameter
 import io.github.aelite.koala.MockedMethod
 import io.github.aelite.koala.Parser
+import io.github.aelite.koala.stdlib.lang.String
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -18,7 +20,7 @@ class HelloWorldIntegrationTest {
         }
     """
 
-    private var stdoutPrint = MockedMethod("stdoutPrint")
+    private var stdoutPrint = MockedMethod("stdoutPrint", listOf(FormalParameter("value", String)))
     private var Main: Class = Parser().parse(this.source).registerMethod(this.stdoutPrint) as Class
 
     @Test
