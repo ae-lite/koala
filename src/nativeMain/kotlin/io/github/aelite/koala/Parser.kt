@@ -16,32 +16,37 @@ class Parser {
         val parseCtx = parser.parse()
         val clazzCtx = parseCtx.findClazz()!!
 
+        return clazzCtxToAst(clazzCtx)
+    }
+
+    private fun clazzCtxToAst(clazzCtx: KoalaParser.ClazzContext): Class {
         val clazz = Class(clazzCtx.name!!.text!!)
-
-        clazzCtx.nativeMethods
-            .map { nativeMethodCtx -> NativeMethod(
-                nativeMethodCtx.name!!.text!!,
-                nativeMethodCtx.parameters.map { formalParameterCtx -> FormalParameter(
-                    formalParameterCtx.name!!.text!!,
-                    UnresolvedType(formalParameterCtx.type!!.text!!)
-                ) },
-                if (nativeMethodCtx.returnType != null) UnresolvedType(nativeMethodCtx.returnType!!.text!!) else clazz
-            ) { _, _ -> throw Exception("the implementation of the native method was not yet registered") } }
-            .forEach(clazz::registerMethod)
-
-        val astStatementCreator = AstStatementCreator()
-        clazzCtx.methods
-            .map {methodCtx -> AstMethod(
-                methodCtx.name!!.text!!,
-                methodCtx.parameters.map { formalParameterCtx -> FormalParameter(
-                    formalParameterCtx.name!!.text!!,
-                    UnresolvedType(formalParameterCtx.type!!.text!!)
-                ) },
-                if (methodCtx.returnType != null) UnresolvedType(methodCtx.returnType!!.text!!) else clazz,
-                methodCtx.statements.map { statementCtx -> astStatementCreator.visit(statementCtx)!! }
-            )}
-            .forEach(clazz::registerMethod)
-
+        clazzCtx.nativeMethods.forEach { nativeMethodCtx -> clazz.registerMethod(nativeMethodCtxToAst(nativeMethodCtx, clazz)) }
+        clazzCtx.methods.forEach { methodCtx -> clazz.registerMethod(methodCtxToAst(methodCtx, clazz)) }
         return clazz
+    }
+
+    private fun nativeMethodCtxToAst(nativeMethodCtx: KoalaParser.NativeMethodContext, clazz: Class): NativeMethod {
+        return NativeMethod(
+            nativeMethodCtx.name!!.text!!,
+            nativeMethodCtx.parameters.map(this::formalParameterCtxToAst),
+            if (nativeMethodCtx.returnType != null) UnresolvedType(nativeMethodCtx.returnType!!.text!!) else clazz
+        ) { _, _ -> throw Exception("the implementation of the native method was not yet registered") }
+    }
+
+    private fun methodCtxToAst(methodCtx: KoalaParser.MethodContext, clazz: Class): AstMethod {
+        return AstMethod(
+            methodCtx.name!!.text!!,
+            methodCtx.parameters.map(this::formalParameterCtxToAst),
+            if (methodCtx.returnType != null) UnresolvedType(methodCtx.returnType!!.text!!) else clazz,
+            methodCtx.statements.map { statementCtx -> AstStatementCreator().visit(statementCtx)!! }
+        )
+    }
+
+    private fun formalParameterCtxToAst(formalParameterCtx: KoalaParser.FormalParameterContext): FormalParameter {
+        return FormalParameter(
+            formalParameterCtx.name!!.text!!,
+            UnresolvedType(formalParameterCtx.type!!.text!!)
+        )
     }
 }
