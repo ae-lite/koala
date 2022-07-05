@@ -8,9 +8,9 @@ open class Interface(val name: String) {
         return this
     }
 
-    fun invoke(name: String, instance: Object, vararg args: Object): Object {
+    fun invoke(name: String, instance: Object, vararg parameters: Object): Object {
         val method = this.methods[name]
-        if (method != null) return method.invoke(instance, *args)
+        if (method != null) return method.invoke(instance, *parameters)
         throw Exception("method $name not found")
     }
 }

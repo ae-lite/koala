@@ -1,10 +1,10 @@
 package io.github.aelite.koala
 
 class Class(name: String) : InstantiableClass(name) {
-    fun construct(vararg args: Object): Object {
+    fun construct(vararg parameters: Object): Object {
         val instance = Object(this)
         try {
-            return super.invoke("constructor", instance, *args)
+            return super.invoke("constructor", instance, *parameters)
         } catch (_: Exception) { }
         return instance
     }
